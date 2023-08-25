@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 //const { Thought } = require('.');
 
 const reactionSchema = new mongoose.Schema({
-  ractionId: {
+  reactionId: {
     type: mongoose.Schema.Types.ObjectId,
-    default: mongoose.Type.ObjectId,
+    default: mongoose.Types.ObjectId,
   },
   reactionBody: {
     type: String,
@@ -40,7 +41,7 @@ const thoughtSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  reaction: [reactionSchema]
+  reactions: [reactionSchema]
 })
 
 thoughtSchema.virtual('format').get(function () {

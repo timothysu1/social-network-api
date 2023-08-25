@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
-//const { Thought } = require('.');
 
 const reactionSchema = new Schema(
   {
@@ -25,6 +24,7 @@ const reactionSchema = new Schema(
   {
     toJSON: {
       getters: true,
+      virtuals: true,
     },
     id: false,
   });

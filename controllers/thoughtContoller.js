@@ -5,7 +5,7 @@ module.exports = {
   //get thoughts
   async getThoughts(req, res) {
     try {
-      const thoughts = await Thought.find();
+      const thoughts = await Thought.find().select('-__v');
       res.status(200).json(thoughts);
     } catch (err) {
       console.log(err);
@@ -35,13 +35,16 @@ module.exports = {
       const user = await User.findOneAndUpdate(
         { _id: req.body.userId },
         { $set: { thoughts: thought._id } },
-        { new: ture }
+        { new: true }
       );
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      res.status(200).json(thought);
+      res.status(200).json({
+        thought,
+        userId: req.body.userId,
+      });
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -54,7 +57,7 @@ module.exports = {
         { _id: req.params.thoughtId },
         { thoughtText: req.body.thoughtText },
         { new: true }
-      );
+      ).select('-__v');
       if (!thought) {
         return res.status(404).json({ message: 'Thought not found' });
       }
@@ -67,7 +70,7 @@ module.exports = {
   //delete thought
   async deleteThought(req, res) {
     try {
-      const thought = await Thought.findOneAndRemove({ _id: req.params.thoughtId });
+      const thought = await Thought.findOneAndRemove({ _id: req.params.thoughtId }).select('-__v');
       if (!thought) {
         return res.status(404).json({ message: 'Thought not found' });
       }
@@ -84,7 +87,7 @@ module.exports = {
         { _id: req.params.thoughtId },
         { $addToSet: { reactions: req.body } },
         { new: true }
-      );
+      ).select('-__v');
       if (!thought) {
         return res.status(404).json({ message: 'Thought not found' });
       }
@@ -97,11 +100,13 @@ module.exports = {
   //remove thought
   async deleteReaction(req, res) {
     try {
-      const thought = await Thought.findByIdAndUpdate(
+      console.log(req.body.reactionId)
+      const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reactions: { reactionId: req.body.reactionId } } },
+        { $pull: { reactions: { _id: req.body.reactionId } } },
         { new: true }
-      )
+      );
+      console.log(thought)
       if (!thought) {
         return res.status(404).json({ message: 'Thought not found' });
       }

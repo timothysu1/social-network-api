@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 //const { Thought } = require('.');
 
-const reactionSchema = new mongoose.Schema(
+const reactionSchema = new Schema(
   {
     reactionId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -54,12 +54,17 @@ const thoughtSchema = new mongoose.Schema(
   {
     toJSON: {
       getters: true,
+      virtuals: true
     },
     id: false,
   })
 
 thoughtSchema.virtual('format').get(function () {
   return this.createdAt.toLocaleString();
+})
+
+thoughtSchema.virtual('reactionCount').get(function () {
+  return this.reactions.length;
 })
 
 const Thought = model('thought', thoughtSchema);

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+//const { Thought } = require('.');
 
 const reactionSchema = new mongoose.Schema({
   ractionId: {
@@ -24,7 +25,7 @@ reactionSchema.virtual('format').get(function () {
   return this.createdAt.toLocaleString();
 })
 
-const thoughtsSchema = new mongoose.Schema({
+const thoughtSchema = new mongoose.Schema({
   thoughtText: {
     type: String,
     required: true,
@@ -42,7 +43,10 @@ const thoughtsSchema = new mongoose.Schema({
   reaction: [reactionSchema]
 })
 
-thoughtsSchema.virtual('format').get(function () {
+thoughtSchema.virtual('format').get(function () {
   return this.createdAt.toLocaleString();
 })
 
+const Thought = model('thought', thoughtSchema);
+
+module.exports = Thought;

@@ -2,47 +2,61 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 //const { Thought } = require('.');
 
-const reactionSchema = new mongoose.Schema({
-  reactionId: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: mongoose.Types.ObjectId,
+const reactionSchema = new mongoose.Schema(
+  {
+    reactionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: mongoose.Types.ObjectId,
+    },
+    reactionBody: {
+      type: String,
+      required: true,
+      maxlength: 280,
+    },
+    username: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    }
   },
-  reactionBody: {
-    type: String,
-    required: true,
-    maxlength: 280,
-  },
-  username: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  }
-})
+  {
+    toJSON: {
+      getters: true,
+    },
+    id: false,
+  });
 
 reactionSchema.virtual('format').get(function () {
   return this.createdAt.toLocaleString();
-})
+});
 
-const thoughtSchema = new mongoose.Schema({
-  thoughtText: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 280,
+const thoughtSchema = new mongoose.Schema(
+  {
+    thoughtText: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 280,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    reactions: [reactionSchema]
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  username: {
-    type: String,
-    required: true,
-  },
-  reactions: [reactionSchema]
-})
+  {
+    toJSON: {
+      getters: true,
+    },
+    id: false,
+  })
 
 thoughtSchema.virtual('format').get(function () {
   return this.createdAt.toLocaleString();
